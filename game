@@ -1,0 +1,354 @@
+import random
+import os
+
+# The total number of cards in a standard card deck
+max = 52
+
+# The cards in the deck and their names
+  # Used to show the players hand
+deck = ["Ace ♣", "Two ♣", "Three ♣", "Four ♣", "Five ♣", "Six ♣", "Seven ♣", "Eight ♣", "Nine ♣", "Ten ♣", "Jack ♣", "Queen ♣", "King ♣",
+        
+"Ace ♠", "Two ♠", "Three ♠", "Four ♠", "Five ♠", "Six ♠", "Seven ♠", "Eight ♠", "Nine ♠", "Ten ♠", "Jack ♠", "Queen ♠", "King ♠",
+
+"Ace ♦", "Two ♦", "Three ♦", "Four ♦", "Five ♦", "Six ♦", "Seven ♦", "Eight ♦", "Nine ♦", "Ten ♦", "Jack ♦", "Queen ♦", "King ♦",
+       
+"Ace ♥", "Two ♥", "Three ♥", "Four ♥", "Five ♥", "Six ♥", "Seven ♥", "Eight ♥", "Nine ♥", "Ten ♥", "Jack ♥", "Queen ♥", "King ♥"]
+
+# The "score" values of each card
+deck_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10,
+              1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10,
+              1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10,
+              1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10,]
+
+# Player hand and the players "score"
+player = []
+player_score = []
+# Computer hand and the computers score
+computer = []
+computer_score = []
+
+# Deals the first two cards to both player_score and computer_score
+  # Sets the initial value of each players hands
+def first_deal(player):
+  global max
+  # Adds two cards to the players hand
+  if len(player) == 0:
+    for i in range(2):
+      z = random.randint(1, max)
+      new_card = deck[z]
+      # Adding the card based from a random number
+      player.append(new_card)
+      deck.pop(z)
+  
+      # Adding the score value to the players score
+      player_score.append(deck_values[z])
+      deck_values.pop(z)
+  
+      # Lowering the maximum number of cards the game can choose from
+      max -= 1
+
+    # What's displayed at the start of the game
+    print("*******************************************************")
+    print("Your starting hand: ")
+    print(str(player))
+    print("Your starting score: ")
+    print(sum(player_score))
+    print("*******************************************************")
+    print("   ")
+  
+    # Same thing as previous but this time for the computer opponent
+    for i in range(2):
+      y = random.randint(1, max)
+      new_card = deck[y]
+      computer.append(new_card)
+      deck.pop(y)
+      computer_score.append(deck_values[y])
+      deck_values.pop(y)
+      max -= 1
+
+  while sum(player_score) < 21 and sum(computer_score) < 21:
+      hit()
+
+# 
+
+# The end-game
+  # Sees who the winner is and declares it to the player
+def end():
+  print("   ")
+  print("   ")
+  print("   ")
+  # Checks if computers score value is at 21
+    # If yes, then declare the computer wins
+  if sum(computer_score) == 21:
+    print("=======================================================")
+    print("                  Your opponent wins!                  ")
+    
+    print("Opponents final hand: ")
+    print(str(computer))
+    print("=======================================================")
+
+  # Checks if the computers score value is greater than 21
+    # If yes, then declare the computer busts and loses
+  if sum(computer_score) > 21:
+    print("=======================================================")
+    print("            Your opponent busts! Game over!            ")
+    print("Opponents hand: ")
+    print(str(computer))
+    print("   ")
+    print("Opponents final score: ")
+    print(sum(computer_score))
+    print("=======================================================")
+
+  # Checks if players score value is at 21
+    # If yes, then declare the player wins
+  if sum(player_score) == 21:
+    print("=======================================================")
+    print("                       You win!                        ")
+    
+    print("Opponents final hand: ")
+    print(str(computer))
+
+    print("Opponents final score: ")
+    print(sum(computer_score))
+    print("=======================================================")
+
+  # Checks if the players score value is greater than 21
+    # If yes, then declare the player busts and loses
+  if sum(player_score) > 21:
+    print("=======================================================")
+    print("                  You bust! Game over!                 ")
+    
+    print("Opponents final hand: ")
+    print(str(computer))
+    print("   ")
+    print("Opponents final score: ")
+    print(sum(computer_score))
+
+    print("   ")
+    print("   ")
+    
+    print("Your final hand: ")
+    print(str(player))
+    print("   ")
+    print("Your final score: ")
+    print(sum(player_score))
+    print("=======================================================")
+# 
+
+    
+# The function that the computer uses to choose to hit or stand
+def computer_hit():
+  global max
+  # Tells the computer to hit if the score is 10 or below
+  if sum(computer_score) <= 10:
+    # Chooses what card to draw by using a random integer from 1 to max
+    x = random.randint(1, max)
+    new_card = deck[x]
+    computer.append(new_card)
+    
+    deck.pop(x)
+    
+    # Adds the score value of the card drawn to the computers score
+    computer_score.append(deck_values[x])
+    deck_values.pop(x)
+
+    print("Your opponent takes a hit! ")
+    if sum(computer_score) == 21:
+      end()
+    if sum(computer_score) > 21:
+      end()
+
+  # If the computers score is more than 10 but less than fifteen, it chooses a random between 1 and 100
+  elif sum(computer_score) > 10 and sum(computer_score) < 15:
+    coin_flip = random.randint(1, 100)
+    # If the integer chosen is 65 or less, take a hit
+    if coin_flip <= 65:
+      x = random.randint(1, max)
+      new_card = deck[x]
+      computer.append(new_card)
+      
+      deck.pop(x)
+      
+      computer_score.append(deck_values[x])
+      deck_values.pop(x)
+  
+      print("Your opponent takes a hit! ")
+      if sum(computer_score) == 21:
+        end()
+      if sum(computer_score) > 21:
+        end()
+      
+    # If the integer chosen is 66 or more, stand
+    elif coin_flip > 65:
+      print("Your opponent stands. ")
+      print(" ")
+      print(" ")
+
+  # If the computer score is more than 15 and less than 21, choose another random integer
+  elif sum(computer_score) > 15 and sum(computer_score) < 21:
+    coin_flip = random.randint(1, 100)
+    # If the integer chosen is 40 or below, take a hit
+    if coin_flip <= 40:
+      x = random.randint(1, max)
+      new_card = deck[x]
+      computer.append(new_card)
+      
+      deck.pop(x)
+      
+      computer_score.append(deck_values[x])
+      deck_values.pop(x)
+  
+      print("Your opponent takes a hit! ")
+      if sum(computer_score) == 21:
+        end()
+      if sum(computer_score) > 21:
+        end()
+
+    # Any other value causes the opponent to stand
+    else:
+      print("Your opponent stands. ")
+      
+
+
+# Asks the player if they would like to hit
+def hit():
+  global max
+  # Asks if the player would like to stand or hit
+  hit = input("Would you like to hit? (y/n) ")
+  print(" ")
+  # If the plaer respinds with yes, hit procedures continues
+  if hit == "y":
+    # Takes a random integer from the deck and adds it to the players hand
+    u = random.randint(1, max)
+    new_card = deck[u]
+    player.append(new_card)
+    # What is displayed
+    print("-------------------------------------------------------")
+    print("Your hand:")
+    print(str(player))
+  
+    deck.pop(u)
+
+    # Takes a random integer from the deck_values and adds it to the players score
+    player_score.append(deck_values[u])
+    deck_values.pop(u)
+    # What is displayed
+    print("Your score:")
+    print(sum(player_score))
+    print("-------------------------------------------------------")
+    print("   ")
+
+    max -= 1
+    # Checks if player score would result in the end() function to run
+    if sum(player_score) == 21:
+      end()
+    if sum(player_score) > 21:
+      end()
+    # If it does not end, run computer hit procedure
+    else:
+    # Has the computer run the hit procedure after the players hit procedure
+      computer_hit()
+
+  # If the player chooses no, have the computer run hit procedure
+  elif hit == "n":
+    computer_hit()
+
+  else:
+    print("Invalid Command.")
+    print("Please try again.")
+
+
+
+# 
+# How to play Blackjack
+def rules():
+  print("-------------------------------------------------------")
+  print("|                        Rules                        |")
+  print("|   Blackjack, also known as 21, is a game commonly   |")
+  print("|       played in casinos. The goal of the game       |")
+  print("|        is to have your score value equal 21!        |")
+  print("|                                                     |")
+  print("|      In this version of the game, aces are the      |")
+  print("|               equivalent of one point,              |")
+  print("|          while all face cards are equal to          |")
+  print("|     ten points. Other cards are worth whatever      |")
+  print("|          number is written on their card.           |")
+  print("|                                                     |")
+  print("|                      Examples:                      |")
+  print("|               Ace of Hearts = 1 point               |")
+  print("|               Six of Clubs = 6 points               |")
+  print("|             King of Diamonds = 10 points            |")
+  print("|                                                     |")
+  print("|         Displayed to you will be your hand          |")
+  print("|        and the score equivalent of your hand        |")
+  print("|                                                     |")
+  print("|                   Terms to know:                    |")
+  print("|           Hit - When you want to receive            |")
+  print("|                     another card                    |")
+  print("|          Bust - When you or your opponents          |")
+  print("|                   score goes over 21                |")
+  print("|          Stand - When you or your opponent          |")
+  print("|               choose to not take a hit              |")
+  print("|                                                     |")
+  print("|                                                     |")
+  print("|                    How to play:                     |")
+  print("|         You and your opponent will be dealt         |")
+  print("|           two cards; this is your initial           |")
+  print("|                        hand.                        |")
+  print("|                                                     |")
+  print("|      From there, you will be asked if you want      |")
+  print("|             to take a hit. If you say               |")
+  print("|           no, you stand. Your opponent is           |")
+  print("|      asked this as well; you will be notified       |")
+  print("|                if they stand or not.                |")
+  print("|                                                     |")
+  print("|          The game ends when either you or           |")
+  print("|           your opponent hits 21 or busts!           |")
+  print("|                                                     |")
+  print("|                                                     |")
+  print("|            Type 'return' whenever you're            |")
+  print("|                ready to start playing!              |")
+  print("-------------------------------------------------------")
+  print(" ")
+  print(" ")
+
+# 
+# The first thing the player sees
+def intro():
+  print("-------------------------------------------------------")
+  print("|                                                     |")
+  print("|                Welcome to Blackjack!                |")
+  print("|                                                     |")
+  print("| Type 'rules' if you need an overview of how to play |")
+  print("|                                                     |")
+  print("|                Are you ready to play?               |")
+  print("|                        y/n                          |")
+  print("|                                                     |")
+  print("|                                                     |")
+  print("-------------------------------------------------------")
+  print(" ")
+  print(" ")
+  # If the player is ready to play, they type 'y'
+  start = input("Are you ready to play? ")
+  # Starts game
+  if start == "y":
+    os.system('clear')
+    first_deal(player)
+  # Restarts intro sequence
+  if start == "n":
+    print("You can either start the game or check the rules!")
+    print("Those are your only two options!")
+    start = input("Are you ready to play? ")
+  # Takes the player to the 'rules' screen
+  if start == 'rules':
+    os.system('clear')
+    rules()
+    return_to_intro = input("Type 'return' whenever you're ready to start playing! ")
+    if return_to_intro == "return":
+      os.system('clear')
+      return intro()
+
+
+# 
+
+intro()
